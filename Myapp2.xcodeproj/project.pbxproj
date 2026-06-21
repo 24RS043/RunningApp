@@ -6,26 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F90C62552FE4EA25006268FE /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F90C62542FE4EA25006268FE /* FirebaseFirestore */; };
+		F90C62582FE679D2006268FE /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F90C62572FE679D2006268FE /* FirebaseAuth */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		F9A0BF032FBB1E24008A476B /* Myapp2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Myapp2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F9A0BF192FBD532F008A476B /* Exceptions for "Myapp2" folder in "Myapp2" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = F9A0BF022FBB1E24008A476B /* Myapp2 */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F9A0BF052FBB1E24008A476B /* Myapp2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				F9A0BF192FBD532F008A476B /* Exceptions for "Myapp2" folder in "Myapp2" target */,
-			);
 			path = Myapp2;
 			sourceTree = "<group>";
 		};
@@ -36,16 +28,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F90C62552FE4EA25006268FE /* FirebaseFirestore in Frameworks */,
+				F90C62582FE679D2006268FE /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F90C62562FE679D2006268FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F9A0BEFA2FBB1E24008A476B = {
 			isa = PBXGroup;
 			children = (
 				F9A0BF052FBB1E24008A476B /* Myapp2 */,
+				F90C62562FE679D2006268FE /* Frameworks */,
 				F9A0BF042FBB1E24008A476B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -78,6 +80,8 @@
 			);
 			name = Myapp2;
 			packageProductDependencies = (
+				F90C62542FE4EA25006268FE /* FirebaseFirestore */,
+				F90C62572FE679D2006268FE /* FirebaseAuth */,
 			);
 			productName = Myapp2;
 			productReference = F9A0BF032FBB1E24008A476B /* Myapp2.app */;
@@ -107,6 +111,9 @@
 			);
 			mainGroup = F9A0BEFA2FBB1E24008A476B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F90C62532FE4EA25006268FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F9A0BF042FBB1E24008A476B /* Products */;
 			projectDirPath = "";
@@ -268,7 +275,7 @@
 				DEVELOPMENT_TEAM = ATPHVHD8UA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Myapp2/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ランニング距離を計測するために位置情報を使用します";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -305,7 +312,7 @@
 				DEVELOPMENT_TEAM = ATPHVHD8UA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Myapp2/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ランニング距離を計測するために位置情報を使用します";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -353,6 +360,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F90C62532FE4EA25006268FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 11.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F90C62542FE4EA25006268FE /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F90C62532FE4EA25006268FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		F90C62572FE679D2006268FE /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F90C62532FE4EA25006268FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F9A0BEFB2FBB1E24008A476B /* Project object */;
 }
