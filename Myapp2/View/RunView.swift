@@ -10,7 +10,9 @@ import MapKit
 
 struct RunView: View {
     @ObservedObject var locationManager: LocationManager
+    //LocationManagerというクラスのデータを監視して、変化したら画面を自動更新するための宣言
     @AppStorage("weight") var weight = ""
+    //体重を保存する変数
     
     var body: some View {
         ZStack{//奥行き方向
@@ -34,7 +36,7 @@ struct RunView: View {
             VStack  { //縦並び
                 
                 TextField("体重(kg)", text: $weight) //体重入力欄
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textFieldStyle(RoundedBorderTextFieldStyle())//入力欄を角丸の枠付き
                     .keyboardType(.decimalPad)//キーボードの種類変更
                     .submitLabel(.done) //数字専用キーボード
                     .padding()
@@ -46,19 +48,22 @@ struct RunView: View {
                     VStack {
                         
                         Text("時間")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                            .font(.caption)//小さい文字にする
+                            .foregroundColor(.gray)//文字色を灰色にする
                         
                         Text(
                             String(
                                 format: "%d:%02d:%02d",
+                                //%d：整数を表示
+                                //2：2桁で表示する
+                                //0：足りない桁を0で埋める
                                 locationManager.elapsedTime / 3600,
                                 (locationManager.elapsedTime % 3600) / 60,
                                 locationManager.elapsedTime % 60
                             )
                         )
                         .font(.title2)
-                        .bold()
+                        .bold()//太く
                     }
                     
                     VStack {
@@ -108,13 +113,15 @@ struct RunView: View {
                     .foregroundColor(.white)
                     .cornerRadius(20)
                     .font(.headline)
+                    .disabled(!locationManager.isRunning)
                 }
                 .padding(.horizontal)
                 .padding(.bottom,40)
                 
+                //消費カロリー計算
                 if let weightValue = Double(weight) {// 文字列を数字に変換
                     
-                    let calories = weightValue * (locationManager.distance / 1000)
+                    let calories = weightValue * (locationManager.distance / 1000)*1.05
                     
                     
                     Text(
@@ -126,10 +133,14 @@ struct RunView: View {
                     .font(.title3)
                     .padding(.bottom, 10)
                 }
+                
+                //平均ペース表示
                 if locationManager.distance > 0 {
                     let pacePerKm = Double(locationManager.elapsedTime) / (locationManager.distance / 1000)
+                    //1kmあたりの時間
                     let paceMinutes = Int(pacePerKm) / 60
                     let paceSeconds = Int(pacePerKm) % 60
+                    //分・秒に変換
                     
                     Text(
                         String(format: "平均ペース: %d'%02d\" /km", paceMinutes, paceSeconds)

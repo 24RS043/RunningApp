@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @ObservedObject var locationManager: LocationManager
+    @ObservedObject var store: RunRecordStore
+    @ObservedObject var authManager: AuthManager
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(locationManager.records) { record in
+                ForEach(store.records) { record in
                     NavigationLink {
                         RouteDetailView(record: record)
                     } label: {
@@ -36,9 +37,16 @@ struct HistoryView: View {
                         }
                     }
                 }
-                .onDelete(perform: locationManager.deleteRecords)
+                .onDelete(perform: store.delete)
             }
             .navigationTitle("履歴")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("ログアウト") {
+                        authManager.logout()
+                    }
+                }
+            }
         }
     }
 }

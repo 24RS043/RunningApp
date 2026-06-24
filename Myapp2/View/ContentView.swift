@@ -1,31 +1,33 @@
 import SwiftUI
 
 struct ContentView: View {
-    // 位置情報・記録を管理するクラスを1つだけ作る
-    // ここで作った1つを両方のタブで共有する（@StateObjectは画面の持ち主が使う）
     @ObservedObject var authManager: AuthManager
     @StateObject var locationManager = LocationManager()
-    
+
+    // Firestore担当（履歴データを持つ係）を1つ作る
+    @StateObject var store = RunRecordStore()
+
     var body: some View {
-        // TabView：画面下のタブで「計測」と「履歴」を切り替える
         TabView {
-            // 計測タブ：地図・距離・時間・Start/Stop
+            // 計測タブ
             RunView(locationManager: locationManager)
                 .tabItem {
-                    // tabItem：タブの見た目（文字＋アイコン）
                     Label("計測", systemImage: "figure.run")
                 }
-            
-            // 履歴タブ：過去の記録一覧
-            HistoryView(locationManager: locationManager)
+
+            // 履歴タブ（store を渡す）
+            HistoryView(store: store, authManager: authManager)
                 .tabItem {
                     Label("履歴", systemImage: "list.bullet")
                 }
         }
-        // 画面が出たとき、ログイン中のユーザーIDを LocationManager に渡す
         .onAppear {
-            locationManager.currentUserId = authManager.userId
-            locationManager.loadRecordsFromFirestore()
+            // ログイン中のユーザーIDを store に伝える
+            store.currentUserId = authManager.userId
+            // LocationManager にも store を渡して、保存をお願いできるようにする
+            locationManager.store = store
+            // 履歴を読み込む
+            store.load()
         }
     }
 }

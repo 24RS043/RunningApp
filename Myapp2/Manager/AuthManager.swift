@@ -3,14 +3,14 @@
 //  Myapp2
 //
 //  Created by  KoudaTakuma       on 2026/06/21.
-//
+//Firebase Authenticationを使ってユーザーのログイン状態を管理するためのファイル
 
 import Foundation
 import FirebaseAuth
-import Combine
+import Combine //データの変化を検知し、変化した内容を画面に自動で反映するための機能を読み込む
 
 class AuthManager: ObservableObject {
-
+    //データの変更をSwiftUIの画面へ通知できるようにする
     // 今ログインしているユーザー（ログインしていなければ nil）
     // ログインしているかどうか
     @Published var isLoggedIn: Bool = false
