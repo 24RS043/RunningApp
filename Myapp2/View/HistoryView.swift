@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HistoryView: View {
     @ObservedObject var store: RunRecordStore
-    @ObservedObject var authManager: AuthManager
     
     var body: some View {
         NavigationStack {
@@ -40,12 +39,14 @@ struct HistoryView: View {
                 .onDelete(perform: store.delete)
             }
             .navigationTitle("履歴")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("ログアウト") {
-                        authManager.logout()
-                    }
-                }
+            // ↓ 追加
+            .alert("エラー", isPresented: Binding(
+                get: { store.errorMessage != nil },
+                set: { if !$0 { store.errorMessage = nil } }
+            )) {
+                Button("OK") { store.errorMessage = nil }
+            } message: {
+                Text(store.errorMessage ?? "")
             }
         }
     }

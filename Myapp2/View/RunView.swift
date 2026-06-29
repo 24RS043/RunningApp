@@ -7,13 +7,15 @@
 
 import SwiftUI
 import MapKit
+import SwiftData
 
 struct RunView: View {
+    @Environment(\.modelContext) private var context
     @ObservedObject var locationManager: LocationManager
+    @Query private var characters: [GameCharacter]
+    @Query private var progresses: [GameProgress]
+    @State private var earnedMessage: String?
     //LocationManagerというクラスのデータを監視して、変化したら画面を自動更新するための宣言
-    @AppStorage("weight") var weight = ""
-    //体重を保存する変数
-    
     var body: some View {
         ZStack{//奥行き方向
             Map(){ //地図表示
@@ -35,11 +37,6 @@ struct RunView: View {
             
             VStack  { //縦並び
                 
-                TextField("体重(kg)", text: $weight) //体重入力欄
-                    .textFieldStyle(RoundedBorderTextFieldStyle())//入力欄を角丸の枠付き
-                    .keyboardType(.decimalPad)//キーボードの種類変更
-                    .submitLabel(.done) //数字専用キーボード
-                    .padding()
                 
                 Spacer()
                 
@@ -118,21 +115,6 @@ struct RunView: View {
                 .padding(.horizontal)
                 .padding(.bottom,40)
                 
-                //消費カロリー計算
-                if let weightValue = Double(weight) {// 文字列を数字に変換
-                    
-                    let calories = weightValue * (locationManager.distance / 1000)*1.05
-                    
-                    
-                    Text(
-                        String(
-                            format: "消費カロリー: %.1f kcal",
-                            calories
-                        )
-                    )
-                    .font(.title3)
-                    .padding(.bottom, 10)
-                }
                 
                 //平均ペース表示
                 if locationManager.distance > 0 {
@@ -159,5 +141,41 @@ struct RunView: View {
                 for: nil
             )
         }
+        .onChange(of: locationManager.lastRunQualified) { _, qualified in
+            if qualified {
+                checkRunBonus()
+                locationManager.lastRunQualified = false
+            }
+        }
+        .alert("ミッション達成！", isPresented: Binding(
+            get: { earnedMessage != nil },
+            set: { if !$0 { earnedMessage = nil } }
+        )) {
+            Button("OK") { earnedMessage = nil }
+        } message: {
+            Text(earnedMessage ?? "")
+        }
+    }
+    private func checkRunBonus() {
+        let character = characters.first ?? {
+            let new = GameCharacter()
+            context.insert(new)
+            return new
+        }()
+        let progress = progresses.first ?? {
+            let new = GameProgress()
+            context.insert(new)
+            return new
+        }()
+        
+        let earned = MissionManager.checkRunBonus(
+            character: character, progress: progress, totalDistance: locationManager.distance
+        )
+        
+        if earned > 0 {
+            try? context.save()
+            earnedMessage = "ランニング達成！ \(earned) ポイント獲得！"
+        }
     }
 }
+

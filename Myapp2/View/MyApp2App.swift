@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import FirebaseCore
 
 // Firebaseを初期化するためのクラス
@@ -30,6 +31,7 @@ struct MyApp2App: App {
             // ログイン状態によって表示する画面を切り替える
             if authManager.isLoggedIn {
                 ContentView(authManager: authManager)   // ログイン済み → アプリ本体
+                    .modelContainer(for: [GameCharacter.self, GameProgress.self])
             } else {
                 LoginView(authManager: authManager)   // 未ログイン → ログイン画面
             }

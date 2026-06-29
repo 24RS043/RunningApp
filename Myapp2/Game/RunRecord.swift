@@ -11,7 +11,7 @@ import Foundation
 struct RunRecord: Identifiable, Codable {
     
     // 各履歴を識別するための一意のID
-    let id = UUID()
+    var id :String
     
     // ランニングを終了した日時
     let date: Date
@@ -27,7 +27,6 @@ struct RunRecord: Identifiable, Codable {
     
     //走行ルート
     var route: [RoutePoint] = []
-    var firestoreId: String? = nil //Firestore上のドキュメントID
     
     // ラップ（1kmごとの区間タイム・秒）
     var laps: [Int] = []

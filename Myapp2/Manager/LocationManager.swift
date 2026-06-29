@@ -30,12 +30,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var nextLapDistance: Double = 1000
     // 前のラップを刻んだときの経過時間（区間タイムの計算に使う）
     var lastLapTime: Int = 0
-    
+    var profileStore: UserProfileStore?
     
     // Firestoreへの保存をお願いする係（ContentViewからセットされる）
     var store: RunRecordStore?
     
     @Published var isRunning = false
+    @Published var lastRunQualified = false
     @Published var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 35.6812, longitude:139.7671),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -77,12 +78,11 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()//GPS更新を停止
         
         timer?.invalidate() //タイマー停止
-        let weight = Double(
-            UserDefaults.standard.string(forKey: "weight") ?? "0"
-        ) ?? 0
-        calories = weight * (distance / 1000) * 1.05//カロリー計算
+        let weight = profileStore?.weight ?? 0
+        calories = weight * (distance / 1000) * 1.05
         
         let newRecord = RunRecord( //RunRecord型の新しいランニング記録を作成
+            id: UUID().uuidString,
             date: Date(),//現在日時を保存
             distance: distance, //現在の走行距離
             time: elapsedTime,//経過時間
@@ -93,6 +93,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // 保存と履歴管理はFirestore担当(store)にお願いする
         store?.add(newRecord)
+        // 1km以上走っていたらミッション対象としてフラグを立てる
+        if distance >= 1000 {
+            lastRunQualified = true
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
